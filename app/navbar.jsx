@@ -14,7 +14,7 @@ class Navbar extends React.Component {
       margin: 0,
       padding: 0,
       overflow: 'hidden',
-      backgroundColor: '#333',
+      backgroundColor: 'yellow',
     }
 
     var linkstyle = {

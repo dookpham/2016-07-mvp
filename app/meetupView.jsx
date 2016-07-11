@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from './navbar.jsx';
+import MeetupList from './meetupList.jsx';
 
-class FrontView extends React.Component {
+class MeetupView extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
@@ -11,10 +12,11 @@ class FrontView extends React.Component {
     return (
       <div>
         <Navbar />
-        Main View
+        Meetup View
+        <MeetupList />
       </div>
       );
   }
 }
 
-module.exports = FrontView;
+module.exports = MeetupView;

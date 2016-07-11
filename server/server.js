@@ -31,6 +31,27 @@ app.get('/api/meetups', function(req, res) {
   // res.send();
 });
 
+app.get('/api/friends', function(req, res) {
+  console.log('GET for friends');
+  db.User.sync()
+    .then(function() {
+      return db.User.findAll();
+    })
+    .then(function(results) {
+      res.json(results);
+    });
+});
+
+app.get('/api/restaurants', function(req, res) {
+  console.log('GET for friends');
+  db.Restaurant.sync()
+    .then(function() {
+      return db.Restaurant.findAll();
+    })
+    .then(function(results) {
+      res.json(results);
+    });
+});
 
 var port = 3000;
 app.listen(3000, function(err) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './navbar.jsx';
 
-class FrontView extends React.Component {
+class RestaurantView extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
@@ -11,10 +11,10 @@ class FrontView extends React.Component {
     return (
       <div>
         <Navbar />
-        Main View
+        Restaurant View
       </div>
       );
   }
 }
 
-module.exports = FrontView;
+module.exports = RestaurantView;

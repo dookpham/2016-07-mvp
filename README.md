@@ -13,3 +13,4 @@ USERS-MEETUP JOIN TABLE
 id meetupID userID
 
 
+Friends  |  Restaurants |  Meetups   
