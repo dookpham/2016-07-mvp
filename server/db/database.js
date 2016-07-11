@@ -9,14 +9,38 @@ var User = db.define('User', {
   username: Sequelize.STRING
 });
 
-var Message = db.define('Message', {
-  userid: Sequelize.INTEGER,
-  text: Sequelize.STRING,
-  roomname: Sequelize.STRING
+
+var Meetup = db.define('Meetup', {
+  size: Sequelize.INTEGER,
+  restaurant: Sequelize.STRING,
 });
+
+var UserMeetups = db.define('UserMeetups', {
+
+});
+
+
+User.belongsToMany(Meetup, { through: UserMeetups });
+Meetup.belongsToMany(User, { through: UserMeetups });
+
+// USERS Table
+// id name
+
+// MEETUP Table
+// id location date size?
+
+// USERS-MEETUP JOIN TABLE
+// id meetupID userID
+
 
 /* Sequelize comes with built in support for promises
  * making it easy to chain asynchronous operations together */
+
+Meetup.sync()
+  .then(function() {
+    return Meetup.create({size: 4, restaurant: 'Chipotle'});
+  });
+
 User.sync()
   .then(function() {
     // Now instantiate an object and save it:
