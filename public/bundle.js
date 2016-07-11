@@ -56,16 +56,20 @@
 
 	var _reactRouter = __webpack_require__(172);
 
-	var _meetupList = __webpack_require__(236);
+	var _meetupList = __webpack_require__(234);
 
 	var _meetupList2 = _interopRequireDefault(_meetupList);
+
+	var _navbar = __webpack_require__(237);
+
+	var _navbar2 = _interopRequireDefault(_navbar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.hashHistory },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _meetupList2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _navbar2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/meetups', component: _meetupList2.default })
 	), document.getElementById('main'));
 
@@ -26658,8 +26662,180 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 234 */,
+/* 234 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _meetup = __webpack_require__(235);
+
+	var _meetup2 = _interopRequireDefault(_meetup);
+
+	var _jquery = __webpack_require__(236);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MeetupList = function (_React$Component) {
+	  _inherits(MeetupList, _React$Component);
+
+	  function MeetupList(props) {
+	    _classCallCheck(this, MeetupList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MeetupList).call(this, props));
+
+	    _this.props = props;
+	    _this.state = {
+	      data: []
+	    };
+	    return _this;
+	  }
+
+	  _createClass(MeetupList, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.serverRequest = _jquery2.default.get('/api/meetups', function (result) {
+	        console.log('data:', result);
+	        this.setState({ 'data': result });
+	      }.bind(this));
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.serverRequest.abort();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var items = this.state.data.map(function (item, i) {
+	        delete item.createdAt;
+	        delete item.updatedAt;
+	        return _react2.default.createElement(_meetup2.default, _extends({ key: i }, item));
+	      });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        'MeetupList with Router',
+	        items
+	      );
+	    }
+	  }]);
+
+	  return MeetupList;
+	}(_react2.default.Component);
+
+	module.exports = MeetupList;
+
+	// var UserGist = React.createClass({
+	//   getInitialState: function() {
+	//     return {
+	//       username: '',
+	//       lastGistUrl: ''
+	//     };
+	//   },
+
+	//   [{"id":1,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:21.000Z","updatedAt":"2016-07-11T19:14:21.000Z"},
+	//   {"id":2,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:29.000Z","updatedAt":"2016-07-11T19:14:29.000Z"},
+	//   {"id":3,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:52.000Z","updatedAt":"2016-07-11T19:14:52.000Z"},{"id":4,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:18:34.000Z","updatedAt":"2016-07-11T19:18:34.000Z"},{"id":5,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:18:35.000Z","updatedAt":"2016-07-11T19:18:35.000Z"},{"id":6,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:29:20.000Z","updatedAt":"2016-07-11T19:29:20.000Z"}]
+
+	//   componentDidMount: function() {
+	//     this.serverRequest = $.get(this.props.source, function (result) {
+	//       var lastGist = result[0];
+	//       this.setState({
+	//         username: lastGist.owner.login,
+	//         lastGistUrl: lastGist.html_url
+	//       });
+	//     }.bind(this));
+	//   },
+
+	//   componentWillUnmount: function() {
+	//     this.serverRequest.abort();
+	//   },
+
+	//   render: function() {
+	//     return (
+	//       <div>
+	//         {this.state.username}'s last gist is
+	//         <a href={this.state.lastGistUrl}>here</a>.
+	//       </div>
+	//     );
+	//   }
+	// });
+
+	// ReactDOM.render(
+	//   <UserGist source="https://api.github.com/users/octocat/gists" />,
+	//   mountNode
+	// );
+
+/***/ },
 /* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Meetup = function (_React$Component) {
+	  _inherits(Meetup, _React$Component);
+
+	  function Meetup(props) {
+	    _classCallCheck(this, Meetup);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Meetup).call(this, props));
+
+	    _this.props = props;
+	    return _this;
+	  }
+
+	  _createClass(Meetup, [{
+	    key: 'render',
+	    value: function render(props) {
+	      // console.log('props:', this.props);
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        'Meetup at ',
+	        this.props.Restaurant.name,
+	        ' for ',
+	        this.props.size
+	      );
+	    }
+	  }]);
+
+	  return Meetup;
+	}(_react2.default.Component);
+
+	module.exports = Meetup;
+
+/***/ },
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*eslint-disable no-unused-vars*/
@@ -36739,127 +36915,6 @@
 
 
 /***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _meetup = __webpack_require__(237);
-
-	var _meetup2 = _interopRequireDefault(_meetup);
-
-	var _jquery = __webpack_require__(235);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MeetupList = function (_React$Component) {
-	  _inherits(MeetupList, _React$Component);
-
-	  function MeetupList(props) {
-	    _classCallCheck(this, MeetupList);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MeetupList).call(this, props));
-
-	    _this.props = props;
-	    _this.state = {
-	      data: []
-	    };
-	    return _this;
-	  }
-
-	  _createClass(MeetupList, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.serverRequest = _jquery2.default.get('/api/meetups', function (result) {
-	        console.log('data:', result);
-	        this.setState({ 'data': result });
-	      }.bind(this));
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.serverRequest.abort();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var items = this.state.data.map(function (item, i) {
-	        delete item.createdAt;
-	        delete item.updatedAt;
-	        return _react2.default.createElement(_meetup2.default, _extends({ key: i }, item));
-	      });
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        'MeetupList with Router',
-	        items
-	      );
-	    }
-	  }]);
-
-	  return MeetupList;
-	}(_react2.default.Component);
-
-	module.exports = MeetupList;
-
-	// var UserGist = React.createClass({
-	//   getInitialState: function() {
-	//     return {
-	//       username: '',
-	//       lastGistUrl: ''
-	//     };
-	//   },
-
-	//   [{"id":1,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:21.000Z","updatedAt":"2016-07-11T19:14:21.000Z"},
-	//   {"id":2,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:29.000Z","updatedAt":"2016-07-11T19:14:29.000Z"},
-	//   {"id":3,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:14:52.000Z","updatedAt":"2016-07-11T19:14:52.000Z"},{"id":4,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:18:34.000Z","updatedAt":"2016-07-11T19:18:34.000Z"},{"id":5,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:18:35.000Z","updatedAt":"2016-07-11T19:18:35.000Z"},{"id":6,"size":4,"restaurant":"Chipotle","createdAt":"2016-07-11T19:29:20.000Z","updatedAt":"2016-07-11T19:29:20.000Z"}]
-
-	//   componentDidMount: function() {
-	//     this.serverRequest = $.get(this.props.source, function (result) {
-	//       var lastGist = result[0];
-	//       this.setState({
-	//         username: lastGist.owner.login,
-	//         lastGistUrl: lastGist.html_url
-	//       });
-	//     }.bind(this));
-	//   },
-
-	//   componentWillUnmount: function() {
-	//     this.serverRequest.abort();
-	//   },
-
-	//   render: function() {
-	//     return (
-	//       <div>
-	//         {this.state.username}'s last gist is
-	//         <a href={this.state.lastGistUrl}>here</a>.
-	//       </div>
-	//     );
-	//   }
-	// });
-
-	// ReactDOM.render(
-	//   <UserGist source="https://api.github.com/users/octocat/gists" />,
-	//   mountNode
-	// );
-
-/***/ },
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36871,6 +36926,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(172);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -36879,37 +36936,85 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Meetup = function (_React$Component) {
-	  _inherits(Meetup, _React$Component);
+	var Navbar = function (_React$Component) {
+	  _inherits(Navbar, _React$Component);
 
-	  function Meetup(props) {
-	    _classCallCheck(this, Meetup);
+	  function Navbar(props) {
+	    _classCallCheck(this, Navbar);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Meetup).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Navbar).call(this, props));
 
 	    _this.props = props;
+	    console.log('make Navbar');
 	    return _this;
 	  }
 
-	  _createClass(Meetup, [{
+	  _createClass(Navbar, [{
 	    key: 'render',
 	    value: function render(props) {
 	      // console.log('props:', this.props);
+	      var navstyle = {
+	        listStyleType: 'none',
+	        margin: 0,
+	        padding: 0,
+	        overflow: 'hidden',
+	        backgroundColor: '#333'
+	      };
+
+	      var linkstyle = {
+	        display: 'block',
+	        color: 'white',
+	        textAlign: 'center',
+	        padding: '14px 16px',
+	        textDecoration: 'none'
+	      };
+
 	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        'Meetup at ',
-	        this.props.Restaurant.name,
-	        ' for ',
-	        this.props.size
+	        'ul',
+	        { style: navstyle },
+	        _react2.default.createElement(
+	          'li',
+	          { style: linkstyle },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/friends', onClick: this.click },
+	            'FRIENDS'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'li',
+	          { style: linkstyle },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/restaurants' },
+	            'RESTAURANTS'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'li',
+	          { style: linkstyle },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/meetups' },
+	            'MEETUPS'
+	          )
+	        )
 	      );
+	    }
+	  }, {
+	    key: 'click',
+	    value: function click(e) {
+	      console.log('clicked', e.target.innerHTML);
 	    }
 	  }]);
 
-	  return Meetup;
+	  return Navbar;
 	}(_react2.default.Component);
 
-	module.exports = Meetup;
+	// Friends  |  Restaurants |  Meetups  
+
+
+	module.exports = Navbar;
 
 /***/ }
 /******/ ]);
