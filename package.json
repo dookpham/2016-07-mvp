@@ -1,0 +1,31 @@
+{
+  "name": "mvp",
+  "version": "1.0.0",
+  "description": "mvp for hack reactor",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "npm run test",
+    "start": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dookpham/2016-07-mvp.git"
+  },
+  "keywords": [
+    "mvp",
+    "meal",
+    "match"
+  ],
+  "author": "Duke Pham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dookpham/2016-07-mvp/issues"
+  },
+  "homepage": "https://github.com/dookpham/2016-07-mvp#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  }
+}
