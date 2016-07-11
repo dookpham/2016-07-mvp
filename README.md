@@ -3,8 +3,11 @@
 USERS Table
 id name
 
-MEETUP Table
-id location date size?
+RESTAURANT Table
+id name
+
+MEETUP Table  
+id restaurantId date size?
 
 USERS-MEETUP JOIN TABLE
 id meetupID userID
