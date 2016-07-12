@@ -3,6 +3,8 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var db = require('./db/database.js');
+// var https = require('https');
+var request = require('request');
 
 var app = express();
 
@@ -41,6 +43,7 @@ const createSession = function(req, res, newUser, redirect) {
 // -------------- ROUTES  -----------------  ///
 
 
+
 app.get('/api/meetups', auth, function(req, res) {
   console.log('GET for meetups');
 
@@ -62,7 +65,66 @@ app.get('/api/restaurants', auth, function(req, res) {
   console.log('GET for restaurants');
   db.Restaurant.findAll()
     .then(function(results) {
+      console.log(results);
       res.json(results);
+    });
+});
+
+app.post('/api/addrestaurant', auth, function(req, res) {
+  console.log('POST for add restaurant', req.body);
+  db.Restaurant.findOrCreate({where: {
+    name: req.body.restaurant.name,
+    'featured_image': req.body.restaurant.featured_image,
+    cuisines: req.body.restaurant.cuisines, 
+    'menu_url': req.body.restaurant.menu_url,
+    'user_rating': req.body.restaurant.user_rating.aggregate_rating,
+    address: req.body.restaurant.location.address
+  }})
+  .then(function(value) {
+    console.log('create restaurant!');
+    res.json(JSON.stringify({success: true}));
+  });
+});
+
+app.post('/api/searchrestaurant', auth, function(req, res) {
+  console.log('POST for search restaurant', req.body);
+  db.Restaurant.findOne({where: {name: req.body.restaurant }})
+    .then(function(results) {
+      if (results) {
+        console.log('restaurant exists!', results);
+      } else {
+        console.log('restaurant does NOT exist!');
+
+        var query = {
+          lat: 37.784108,
+          lon: -122.408977,
+          radius: 500,
+          q: req.body.restaurant,
+          sort: 'real_distance'
+        };
+
+        var queryString = '';
+        for (var k in query) {
+          queryString += k + '=' + query[k] + '&';
+        }
+        var url = 'https://developers.zomato.com/api/v2.1/search?' + queryString;
+        // console.log('url:', url);
+        request({
+          url: url,
+          headers: {
+            'user-key': '9e4de159663e38b767efa078ab673d26',
+          }
+        },
+          function(err, response, body) {
+            if (err) {
+              console.log('ERR', err);
+            }
+            console.log('body:', body);
+            res.json(body);
+          }
+        );
+
+      }
     });
 });
 
@@ -96,6 +158,9 @@ app.post('/api/login', function(req, res) {
 });
 
 
+app.get('/*', function(req, res) {
+  res.redirect('/');
+});
 
 var port = 3000;
 app.listen(3000, function(err) {

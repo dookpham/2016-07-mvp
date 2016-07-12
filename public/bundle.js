@@ -84,7 +84,7 @@
 
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
-	  { history: _reactRouter.hashHistory },
+	  { history: _reactRouter.browserHistory },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _frontView2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _signup2.default }),
@@ -37725,14 +37725,14 @@
 	    key: 'render',
 	    value: function render() {
 	      var items = this.state.data.map(function (item, i) {
-	        delete item.createdAt;
-	        delete item.updatedAt;
-	        return _react2.default.createElement(_restaurant2.default, _extends({ key: i }, item));
+	        return _react2.default.createElement(_restaurant2.default, _extends({ key: i, clickItem: function clickItem(e) {
+	            console.log('clicked', e.target);
+	          } }, item));
 	      });
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'RestaurantList with Router',
 	        items
 	      );
 	    }
@@ -37755,6 +37755,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(172);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37762,6 +37764,30 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var itemStyle = {
+	  margin: '20px'
+	};
+
+	var plusStyle = {
+	  position: 'relative',
+	  fontSize: '100px',
+	  color: 'red',
+	  left: '10px',
+	  top: '-170px',
+	  cursor: 'pointer'
+	};
+
+	var imgStyle = {
+	  width: '200px',
+	  borderRadius: '10px',
+	  cursor: 'pointer'
+	};
+
+	var nameStyle = {
+	  fontSize: '20px',
+	  fontWeight: 700
+	};
 
 	var Restaurant = function (_React$Component) {
 	  _inherits(Restaurant, _React$Component);
@@ -37774,6 +37800,8 @@
 	    _this.props = props;
 	    return _this;
 	  }
+	  // <div onClick={this.props.clickItem} style={plusStyle}>+</div>
+
 
 	  _createClass(Restaurant, [{
 	    key: 'render',
@@ -37781,8 +37809,36 @@
 	      // console.log('props:', this.props);
 	      return _react2.default.createElement(
 	        'div',
-	        null,
-	        this.props.name
+	        { style: itemStyle },
+	        _react2.default.createElement('img', { onClick: this.props.clickItem, style: imgStyle, src: this.props.featured_image }),
+	        _react2.default.createElement(
+	          'div',
+	          { style: nameStyle },
+	          this.props.name
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Cuisine: ',
+	          this.props.cuisines
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Address: ',
+	          this.props.address
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: this.props.menu_url },
+	          'Menu'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'rating = ',
+	          this.props.user_rating || 'none'
+	        )
 	      );
 	    }
 	  }]);
@@ -37804,8 +37860,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(172);
-
 	var _jquery = __webpack_require__(235);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
@@ -37813,6 +37867,14 @@
 	var _inputField = __webpack_require__(249);
 
 	var _inputField2 = _interopRequireDefault(_inputField);
+
+	var _button = __webpack_require__(250);
+
+	var _button2 = _interopRequireDefault(_button);
+
+	var _restaurantResults = __webpack_require__(251);
+
+	var _restaurantResults2 = _interopRequireDefault(_restaurantResults);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37832,7 +37894,10 @@
 
 	    _this.state = {
 	      restaurantName: '',
-	      submitForm: _this.makeSubmitForm().bind(_this)
+	      submitForm: _this.makeSubmitForm().bind(_this),
+	      restaurantAdded: false,
+	      restaurantData: {},
+	      noResultsError: ''
 	    };
 	    return _this;
 	  }
@@ -37844,14 +37909,19 @@
 	        console.log('submit form', this.state.restaurantName);
 	        _jquery2.default.ajax({
 	          type: 'POST',
-	          url: '/api/addrestaurant',
+	          url: '/api/searchrestaurant',
 	          data: {
 	            restaurant: this.state.restaurantName
-	          },
-	          success: function success() {
-	            console.log('submitForm successfully');
 	          }
-	        });
+	        }).done(function (data) {
+	          var results = JSON.parse(data);
+	          console.log('ajax POST done', results);
+	          if (results.results_found) {
+	            this.setState({ restaurantAdded: true, restaurantData: results.restaurants, noResultsError: '' });
+	          } else {
+	            this.setState({ noResultsError: 'No Results Found' });
+	          }
+	        }.bind(this));
 	      };
 	    }
 	  }, {
@@ -37859,22 +37929,27 @@
 	    value: function render() {
 	      var _this2 = this;
 
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'form',
-	          { onSubmit: this.state.submitForm },
-	          _react2.default.createElement(_inputField2.default, { label: 'Restaurant Name', limit: 50, setVal: function setVal(val) {
-	              _this2.state.restaurantName = val;
-	            } }),
+	      if (this.state.restaurantAdded) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(_restaurantResults2.default, { restaurants: this.state.restaurantData })
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
 	          _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
-	          )
-	        )
-	      );
+	            this.state.noResultsError
+	          ),
+	          _react2.default.createElement(_inputField2.default, { label: 'Restaurant Name', limit: 50, setVal: function setVal(val) {
+	              _this2.state.restaurantName = val;
+	            } }),
+	          _react2.default.createElement(_button2.default, { handleClick: this.state.submitForm })
+	        );
+	      }
 	    }
 	  }]);
 
@@ -37946,6 +38021,133 @@
 	}(_react2.default.Component);
 
 	module.exports = InputField;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Button = function (_React$Component) {
+	  _inherits(Button, _React$Component);
+
+	  function Button(props) {
+	    _classCallCheck(this, Button);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, props));
+	  }
+
+	  _createClass(Button, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement("input", { onClick: this.props.handleClick, type: "button", value: "Submit" });
+	    }
+	  }]);
+
+	  return Button;
+	}(_react2.default.Component);
+
+	module.exports = Button;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(172);
+
+	var _restaurant = __webpack_require__(247);
+
+	var _restaurant2 = _interopRequireDefault(_restaurant);
+
+	var _jquery = __webpack_require__(235);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RestaurantResults = function (_React$Component) {
+	  _inherits(RestaurantResults, _React$Component);
+
+	  function RestaurantResults(props) {
+	    _classCallCheck(this, RestaurantResults);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(RestaurantResults).call(this, props));
+	  }
+
+	  _createClass(RestaurantResults, [{
+	    key: 'makeClickRestaurant',
+	    value: function makeClickRestaurant(item) {
+	      var that = this;
+	      return function () {
+	        console.log('add:', item.restaurant.name);
+	        _jquery2.default.ajax({
+	          type: 'POST',
+	          url: '/api/addrestaurant',
+	          data: {
+	            restaurant: item.restaurant
+	          }
+	        }).done(function (data) {
+	          var results = JSON.parse(data);
+	          console.log('ajax POST done', results);
+	          _reactRouter.browserHistory.push('/');
+	          // that.props.history.push('/restaurants');
+	        });
+	      };
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var that = this;
+	      var items = this.props.restaurants.map(function (data, i) {
+	        var clickItem = that.makeClickRestaurant(data);
+	        var item = data.restaurant;
+	        item['user_rating'] = item.user_rating.aggregate_rating;
+	        item.address = item.location.address;
+	        return _react2.default.createElement(_restaurant2.default, _extends({ key: i, clickItem: clickItem }, item));
+	      });
+
+	      return _react2.default.createElement(
+	        'ul',
+	        null,
+	        items
+	      );
+	    }
+	  }]);
+
+	  return RestaurantResults;
+	}(_react2.default.Component);
+
+	module.exports = RestaurantResults;
 
 /***/ }
 /******/ ]);

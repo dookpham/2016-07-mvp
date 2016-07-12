@@ -6,25 +6,31 @@ var User = db.define('User', {
 });
 
 var Restaurant = db.define('Restaurant', {
-  name: Sequelize.STRING
+  name: Sequelize.STRING,
+  'featured_image': Sequelize.STRING,
+  cuisines: Sequelize.STRING,
+  'menu_url': Sequelize.STRING,
+  'user_rating': Sequelize.STRING,
+  'address': Sequelize.STRING,
 });
 
-var Meetup = db.define('Meetup', {
-  size: Sequelize.INTEGER,
-});
+var Meetup, UserMeetup;
+// var Meetup = db.define('Meetup', {
+//   size: Sequelize.INTEGER,
+// });
 
-var UserMeetup = db.define('UserMeetup', {
+// var UserMeetup = db.define('UserMeetup', {
 
-});
+// });
 
-Restaurant.hasMany(Meetup);
-Meetup.belongsTo(Restaurant);
+// Restaurant.hasMany(Meetup);
+// Meetup.belongsTo(Restaurant);
 
-User.hasMany(UserMeetup);
-UserMeetup.belongsTo(User);
+// User.hasMany(UserMeetup);
+// UserMeetup.belongsTo(User);
 
-Meetup.hasMany(UserMeetup);
-UserMeetup.belongsTo(Meetup);
+// Meetup.hasMany(UserMeetup);
+// UserMeetup.belongsTo(Meetup);
 
 User.sync()
   .then(function() {
@@ -41,18 +47,18 @@ User.sync()
         // Restaurant.create({name: 'Sarku'});
         // Restaurant.create({name: 'Charleys'});
       });
-  })
-  .then(function() {
-    Meetup.sync()
-      .then(function() {
-        // Meetup.create({size: 4, RestaurantId: 1});
-        // Meetup.create({size: 4, RestaurantId: 2});
-        // Meetup.create({size: 4, RestaurantId: 3});
-        // Meetup.create({size: 4, RestaurantId: 4});
-      });
-  })
-  .then(function() {
-    UserMeetup.sync();
   });
+  // .then(function() {
+  //   Meetup.sync()
+  //     .then(function() {
+  //       // Meetup.create({size: 4, RestaurantId: 1});
+  //       // Meetup.create({size: 4, RestaurantId: 2});
+  //       // Meetup.create({size: 4, RestaurantId: 3});
+  //       // Meetup.create({size: 4, RestaurantId: 4});
+  //     });
+  // })
+  // .then(function() {
+  //   UserMeetup.sync();
+  // });
 
 module.exports = {User: User, Restaurant: Restaurant, Meetup: Meetup, UserMeetup: UserMeetup };

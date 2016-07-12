@@ -24,13 +24,11 @@ class RestaurantList extends React.Component {
 
   render() {
     const items = this.state.data.map(function(item, i) {
-      delete item.createdAt;
-      delete item.updatedAt;
-      return (<Restaurant key={i} {...item} />);
+      return (<Restaurant key={i} clickItem={(e) => { console.log('clicked', e.target); } } {...item} />);
     });
+
     return (
       <div>
-        RestaurantList with Router       
         {items}
       </div>
       );
