@@ -1,8 +1,6 @@
 import React from 'react';
-import Navbar from './navbar.jsx';
-import FriendList from './friendList.jsx';
 
-class FriendView extends React.Component {
+class Friend extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
@@ -11,12 +9,10 @@ class FriendView extends React.Component {
     // console.log('props:', this.props);
     return (
       <div>
-        <Navbar />
-        Friend View
-        <FriendList />
+        {this.props.username}
       </div>
       );
   }
 }
 
-module.exports = FriendView;
+module.exports = Friend;

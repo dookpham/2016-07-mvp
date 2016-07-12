@@ -27,9 +27,9 @@ class Navbar extends React.Component {
 
     return (
       <ul style={navstyle}>
-        <li style={linkstyle}><Link to="/friends" onClick={this.click}>FRIENDS</Link></li>
-        <li style={linkstyle}><Link to="/restaurants" >RESTAURANTS</Link></li>
-        <li style={linkstyle}><Link to="/meetups" >MEETUPS</Link></li>
+        <li style={linkstyle} className="navBtn"><Link to="/friends" onClick={this.click}>FRIENDS</Link></li>
+        <li style={linkstyle} className="navBtn"><Link to="/restaurants" >RESTAURANTS</Link></li>
+        <li style={linkstyle} className="navBtn"><Link to="/meetups" >MEETUPS</Link></li>
       </ul>
     );
   }

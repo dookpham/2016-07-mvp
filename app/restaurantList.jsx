@@ -1,8 +1,8 @@
 import React from 'react';
-import Meetup from './meetup.jsx';
+import Restaurant from './restaurant.jsx';
 import $ from 'jquery';
 
-class MeetupList extends React.Component {
+class RestaurantList extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
@@ -12,7 +12,7 @@ class MeetupList extends React.Component {
   }
 
   componentDidMount() {
-    this.serverRequest = $.get('/api/meetups', function(result) {
+    this.serverRequest = $.get('/api/restaurants', function(result) {
       console.log('data:', result);
       this.setState({'data': result});
     }.bind(this));
@@ -26,15 +26,15 @@ class MeetupList extends React.Component {
     const items = this.state.data.map(function(item, i) {
       delete item.createdAt;
       delete item.updatedAt;
-      return (<Meetup key={i} {...item} />);
+      return (<Restaurant key={i} {...item} />);
     });
     return (
       <div>
-        MeetupList with Router       
+        RestaurantList with Router       
         {items}
       </div>
       );
   }
 }
 
-module.exports = MeetupList;
+module.exports = RestaurantList;

@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './navbar.jsx';
+import RestaurantList from './restaurantList.jsx';
 
 class RestaurantView extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class RestaurantView extends React.Component {
       <div>
         <Navbar />
         Restaurant View
+        <RestaurantList />
       </div>
       );
   }

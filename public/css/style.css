@@ -1,0 +1,7 @@
+.navBtn:hover:not(.active) {
+  background-color: orange;
+}
+
+.active {
+  background-color: red;
+}
