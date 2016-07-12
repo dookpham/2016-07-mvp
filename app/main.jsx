@@ -10,7 +10,7 @@ import RestaurantView from './restaurantView.jsx';
 
 ReactDOM.render((
   <Router history={hashHistory}>
-    <Route path="/" component={Login}/>
+    <Route path="/" component={FrontView}/>
     <Route path="/login" component={Login}/>
     <Route path="/signup" component={Signup}/>
     <Route path="/friends" component={FriendView}/>

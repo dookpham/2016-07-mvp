@@ -11,18 +11,18 @@ class Signup extends React.Component {
       changeName: this.makeChangeName().bind(this),
       changePassword: this.makeChangePassword().bind(this),
       submitForm: this.makeSubmitForm().bind(this)
-    }
+    };
   }
   makeChangeName() {
     return function(e) {
       this.setState({usernameValue: e.target.value.substr(0, 16)});
-    }
+    };
   }
 
   makeChangePassword() {
     return function(e) {
       this.setState({passwordValue: e.target.value.substr(0, 32)});
-    }
+    };
   }
   
   makeSubmitForm() {
@@ -39,7 +39,7 @@ class Signup extends React.Component {
           console.log('submitForm successfully');
         }
       });
-    }
+    };
   }
   
   render() {

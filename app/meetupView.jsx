@@ -11,7 +11,7 @@ class MeetupView extends React.Component {
     // console.log('props:', this.props);
     return (
       <div>
-        <Navbar />
+        <Navbar current="meetups"/>
         Meetup View
         <MeetupList />
       </div>

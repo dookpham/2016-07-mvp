@@ -11,7 +11,7 @@ class FriendView extends React.Component {
     // console.log('props:', this.props);
     return (
       <div>
-        <Navbar />
+        <Navbar current="friends"/>
         Friend View
         <FriendList />
       </div>
